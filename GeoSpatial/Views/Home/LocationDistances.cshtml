@@ -1,0 +1,112 @@
+﻿@model GeoSpatial.Models.GeoTest
+@using GeoSpatial.ViewModels
+
+@{
+
+    ViewBag.Title = "Location Distances";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // cast the locations distances results
+    IEnumerable<LocationsVM> locationDistances = (IEnumerable<LocationsVM>)ViewBag.LocationDistances;
+
+    // index for row shading
+    bool evenRow = true;
+}
+
+<h2>Location Distances</h2>
+
+@* Display the Source Location Info *@
+<div>
+    <h4>Source Location</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            Location
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+
+        <dt>
+            Latitude
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+
+        <dt>
+            Longitude
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+
+    </dl>
+</div>
+
+@* Display the Location Distances to Source *@
+<h4>Location Distances to Source</h4>
+
+@if ((locationDistances != null) && (locationDistances.Count() > 0))
+{
+    <div class="row">
+        <div class="col-sm-3">
+            <b>Location</b>
+        </div>
+
+        <div class="col-sm-3">
+            <b>Latitude</b>
+        </div>
+
+        <div class="col-sm-3">
+            <b>Longitude</b>
+        </div>
+
+        <div class="col-sm-1">
+            <b>Distance to Source (Miles)</b>
+        </div>
+
+        <div class="col-sm-1">
+            <b>Distance to Source (Kilometers)</b>
+        </div>
+    </div>
+
+    foreach (var location in locationDistances)
+    {
+            <div class="row" style="background-color:@(evenRow ? "lightgrey" : "white")">
+
+                    <div class="col-sm-3">
+                        @location.Location
+                    </div>
+
+                    <div class="col-sm-3">
+                        @location.Latitude
+                    </div>
+
+                    <div class="col-sm-3">
+                        @location.Longitude
+                    </div>
+
+                    <div class="col-sm-1">
+                        @location.DistanceToSourceMiles.Value.ToString("0.0")
+                    </div>
+
+                    <div class="col-sm-1">
+                        @location.DistanceToSourceKilometers.Value.ToString("0.0")
+                    </div>
+
+                </div>
+
+        evenRow = !evenRow;
+    }
+}
+
+<br />
+<br />
+<br />
+<br />
+

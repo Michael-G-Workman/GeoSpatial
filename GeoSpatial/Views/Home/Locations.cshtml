@@ -1,0 +1,61 @@
+﻿@model GeoSpatial.Models.GeoTest
+
+@{
+    ViewBag.Title = "Locations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Locations</h2>
+<p>
+    Enter a Source Location Name, Latitude, and Longitude in decimal format,
+    then find the distances to Cocoa Beach and Central Florida locations.
+    Using Google Maps can give you the Latitude and Longitude coordinates for your source location.
+</p>
+
+@* Form for Create New Author *@
+<div class="form-horizontal">
+    <h4>Source Location</h4>
+
+    <form method="post" action="/Home/Locations">
+        <hr />
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @maxlength = "100", @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @maxlength = "40", @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @maxlength = "40", @class = "form-control" } })
+            </div>
+        </div>
+
+        @* Div Container for Validation Messages *@
+        <div class="text-danger" id="ValidationMessage">
+        </div>
+        <br />
+        <br />
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="FindBTN" value="Find" class="btn btn-primary">Find Distances</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<br />
+<br />
+<br />
