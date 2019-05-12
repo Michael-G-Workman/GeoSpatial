@@ -16,7 +16,7 @@
 <div class="form-horizontal">
     <h4>Source Location</h4>
 
-    <form method="post" id="FindForm" action="/Home/Locations">
+    <form method="post" id="FindDistancesForm" action="/Home/Locations">
         <hr />
         @Html.AntiForgeryToken()
 
@@ -49,7 +49,7 @@
 
     </form>
 
-    @* Form Submit Button *@
+    @* Form Submit Button, Placed Outside Form So Form Can Be Submitted with JQuery Javascript *@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button id="FindBTN" value="Find" class="btn btn-primary">Find Distances</button>
@@ -74,7 +74,7 @@
                 // Location
                 if ($("#Location").val().trim() == "") {
                     formValidated = false;
-                    validationMessage = validationMessage + "Location Required\n";
+                    validationMessage = validationMessage + "Location Required ";
                 }
 
                 // Latitude
@@ -83,13 +83,19 @@
                 // test for empty string
                 if (latitude == "") {
                     formValidated = false;
-                    validationMessage = validationMessage + "Latitude Required\n";
+                    validationMessage = validationMessage + "Latitude Required ";
                 }
 
                 // test for valid number
                 if (isNaN(latitude)) {
                     formValidated = false;
-                    validationMessage = validationMessage + "Latitude Not a Number\n";
+                    validationMessage = validationMessage + "Latitude Not a Number ";
+                }
+
+                // test for valid range, -90 to +90
+                if ((latitude > 90) || (latitude < -90)) {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Latitude Invalid Range, Less than -90 or Greater than +90 ";
                 }
 
                 // Longitude
@@ -98,20 +104,26 @@
                 // test for empty string
                 if (longitude == "") {
                     formValidated = false;
-                    validationMessage = validationMessage + "Longitude Required\n";
+                    validationMessage = validationMessage + "Longitude Required ";
                 }
 
                 // test for valid number
                 if (isNaN(longitude)) {
                     formValidated = false;
-                    validationMessage = validationMessage + "Longitude Not a Number\n";
+                    validationMessage = validationMessage + "Longitude Not a Number ";
+                }
+
+                // test for valid range, -180 to +180
+                if ((longitude > 180) || (longitude < -180)) {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Longitude Invalid Range, Less than -180 or Greater than +180 ";
                 }
 
                 // process form validation, submit form if no errors
                 if (!formValidated) {
                     $("#ValidationMessage").text(validationMessage);
                 } else {
-                    $("#FindForm").submit();
+                    $("#FindDistancesForm").submit();
                 }
 
             });
