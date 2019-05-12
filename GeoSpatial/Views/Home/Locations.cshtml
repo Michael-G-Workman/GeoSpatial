@@ -16,28 +16,28 @@
 <div class="form-horizontal">
     <h4>Source Location</h4>
 
-    <form method="post" action="/Home/Locations">
+    <form method="post" id="FindForm" action="/Home/Locations">
         <hr />
         @Html.AntiForgeryToken()
 
         <div class="form-group">
             @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @maxlength = "100", @class = "form-control" } })
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @id = "Location", @maxlength = "100", @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @maxlength = "40", @class = "form-control" } })
+                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @id = "Latitude", @maxlength = "50", @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @maxlength = "40", @class = "form-control" } })
+                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @id = "Longitude", @maxlength = "50", @class = "form-control" } })
             </div>
         </div>
 
@@ -47,16 +47,74 @@
         <br />
         <br />
 
-        @* Form Submit Button *@
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button id="FindBTN" value="Find" class="btn btn-primary">Find Distances</button>
-            </div>
-        </div>
     </form>
 
+    @* Form Submit Button *@
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button id="FindBTN" value="Find" class="btn btn-primary">Find Distances</button>
+        </div>
+    </div>
 </div>
 
 <br />
 <br />
 <br />
+
+@* JQuery Code for Form Validation *@
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#FindBTN").click(function () {
+
+                var formValidated = true;
+                var validationMessage = "Error: ";
+
+                // Location
+                if ($("#Location").val().trim() == "") {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Location Required\n";
+                }
+
+                // Latitude
+                var latitude = $("#Latitude").val().trim();
+
+                // test for empty string
+                if (latitude == "") {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Latitude Required\n";
+                }
+
+                // test for valid number
+                if (isNaN(latitude)) {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Latitude Not a Number\n";
+                }
+
+                // Longitude
+                var longitude = $("#Longitude").val().trim();
+
+                // test for empty string
+                if (longitude == "") {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Longitude Required\n";
+                }
+
+                // test for valid number
+                if (isNaN(longitude)) {
+                    formValidated = false;
+                    validationMessage = validationMessage + "Longitude Not a Number\n";
+                }
+
+                // process form validation, submit form if no errors
+                if (!formValidated) {
+                    $("#ValidationMessage").text(validationMessage);
+                } else {
+                    $("#FindForm").submit();
+                }
+
+            });
+        });
+    </script>
+}
