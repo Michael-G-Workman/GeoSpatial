@@ -22,28 +22,32 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @id = "Location", @maxlength = "100", @class = "form-control" } })
             </div>
+            <div id="LocationError" class="col-md-7 text-danger text-left" style="display:none;font-size:x-large;">*</div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @id = "Latitude", @maxlength = "50", @class = "form-control" } })
             </div>
+            <div id="LatitudeError" class="col-md-7 text-danger text-left" style="display:none;font-size:x-large;">*</div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-3">
                 @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @id = "Longitude", @maxlength = "50", @class = "form-control" } })
             </div>
+            <div id="LongitudeError" class="col-md-7 text-danger text-left" style="display:none;font-size:x-large;">*</div>
         </div>
 
         @* Div Container for Validation Messages *@
-        <div class="text-danger" id="ValidationMessage">
+        <div class="col-md-12 text-danger" id="ValidationMessage">
         </div>
+
         <br />
         <br />
 
@@ -66,6 +70,42 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            // Location
+            $("#Location").focusout(function () {
+                if ($("#Location").val() != "") {
+                    $("#LocationError").hide();
+                }
+                else {
+                    $("#LocationError").show();
+                }
+            });
+
+            // Latitude
+            $("#Latitude").focusout(function () {
+                if (($("#Latitude").val() != "") &&
+                    (!isNaN($("#Latitude").val())) &&
+                    (($("#Latitude").val() < 90) && ($("#Latitude").val() > -90)))
+                {
+                    $("#LatitudeError").hide();
+                }
+                else {
+                    $("#LatitudeError").show();
+                }
+            });
+
+            // Longitude
+            $("#Longitude").focusout(function () {
+                if (($("#Longitude").val() != "") &&
+                    (!isNaN($("#Longitude").val())) &&
+                    (($("#Longitude").val() < 180) && ($("#Longitude").val() > -180)))
+                {
+                    $("#LongitudeError").hide();
+                }
+                else {
+                    $("#LongitudeError").show();
+                }
+            });
+
             $("#FindBTN").click(function () {
 
                 var formValidated = true;
@@ -74,6 +114,7 @@
                 // Location
                 if ($("#Location").val().trim() == "") {
                     formValidated = false;
+                    $("#LocationError").show();
                     validationMessage = validationMessage + "Location Required ";
                 }
 
