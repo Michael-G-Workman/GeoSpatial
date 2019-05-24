@@ -54,13 +54,10 @@ namespace GeoSpatial.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Locations([Bind(Include = "ID, Location, Latitude, Longitude, GeoPoint")] GeoTest geotest)
         {
-
-            // determine the geopoint and add to model class
-
             // build the location point string from latitude and longitude for the source location
             var sourceLocation = DbGeography.FromText("POINT(" + geotest.Longitude + " " + geotest.Latitude + ")");
 
-            // linq query to get distances and add to viewmodel
+            // linq query to get distances to source location and add to ViewModel
             var locationDistances = (from u in db.GeoTests
                     orderby u.GeoPoint.Distance(sourceLocation)
                     select new LocationsVM {
