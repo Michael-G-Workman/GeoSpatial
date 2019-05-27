@@ -20,35 +20,29 @@
         <hr />
         @Html.AntiForgeryToken()
 
+        @* Location *@
         <div class="form-group">
             @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
                 @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @id = "Location", @maxlength = "100", @class = "form-control" } })
             </div>
-            <div id="LocationError" class="col-md-7 text-danger text-left" style="display:none;font-size:x-large;">*</div>
         </div>
 
+        @* Latitude *@
         <div class="form-group">
             @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
                 @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @id = "Latitude", @maxlength = "50", @class = "form-control" } })
             </div>
-            <div id="LatitudeError" class="col-md-7 text-danger text-left" style="display:none;font-size:x-large;">*</div>
         </div>
 
+        @* Longitude *@
         <div class="form-group">
             @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
                 @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @id = "Longitude", @maxlength = "50", @class = "form-control" } })
             </div>
-            <div id="LongitudeError" class="col-md-7 text-danger text-left" style="display:none;font-size:x-large;">*</div>
         </div>
-
-        @* Div Container for Validation Messages *@
-        <div class="col-md-12 text-danger" id="ValidationMessage">
-        </div>
-        <br />
-        <br />
 
         @* Form Submit Button *@
         <div class="form-group">
@@ -71,100 +65,68 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            // Location
-            $("#Location").focusout(function () {
-                if ($("#Location").val() != "") {
-                    $("#LocationError").hide();
-                }
-                else {
-                    $("#LocationError").show();
-                }
-            });
-
-            // Latitude
-            $("#Latitude").focusout(function () {
-                if (($("#Latitude").val() != "") &&
-                    (!isNaN($("#Latitude").val())) &&
-                    (($("#Latitude").val() < 90) && ($("#Latitude").val() > -90)))
-                {
-                    $("#LatitudeError").hide();
-                }
-                else {
-                    $("#LatitudeError").show();
-                }
-            });
-
-            // Longitude
-            $("#Longitude").focusout(function () {
-                if (($("#Longitude").val() != "") &&
-                    (!isNaN($("#Longitude").val())) &&
-                    (($("#Longitude").val() < 180) && ($("#Longitude").val() > -180)))
-                {
-                    $("#LongitudeError").hide();
-                }
-                else {
-                    $("#LongitudeError").show();
-                }
-            });
-
             $("#FindBTN").click(function () {
 
+                // clear previous errors
+                $(".error").remove();
+
+                // sentinel value whether or not to submit form
                 var formValidated = true;
-                var validationMessage = "Error: ";
+
+                // vars for our form elements
+                var location = $("#Location");
+                var latitude = $("#Latitude");
+                var longitude = $("#Longitude");
 
                 // Location
-                if ($("#Location").val().trim() == "") {
+                if (location.val().trim() == "") {
                     formValidated = false;
-                    $("#LocationError").show();
-                    validationMessage = validationMessage + "Location Required ";
+                    location.after("<span class='error text-danger'>Location Required</span>");
                 }
 
-                // Latitude
-                var latitude = $("#Latitude").val().trim();
-
-                // test for empty string
-                if (latitude == "") {
+                // Latitude - test for empty string
+                if (latitude.val().trim() == "") {
                     formValidated = false;
-                    validationMessage = validationMessage + "Latitude Required ";
+                    latitude.after("<span class='error text-danger'>Latitude Required</span>");
                 }
 
-                // test for valid number
-                if (isNaN(latitude)) {
+                // Latitude - test for valid number
+                else if (isNaN(latitude.val())) {
                     formValidated = false;
-                    validationMessage = validationMessage + "Latitude Not a Number ";
+                    latitude.after("<span class='error text-danger'>Latitude Not a Number</span>");
                 }
 
-                // test for valid range, -90 to +90
-                if ((latitude > 90) || (latitude < -90)) {
+                // Latitude - test for valid range, -90 to +90
+                else if ((latitude.val() > 90) || (latitude.val() < -90)) {
                     formValidated = false;
-                    validationMessage = validationMessage + "Latitude Invalid Range, Less than -90 or Greater than +90 ";
+                    latitude.after("<span class='error text-danger'>" +
+                        "Latitude Invalid Range, Less than - 90 or Greater than + 90" +
+                        "</span>");
                 }
 
-                // Longitude
-                var longitude = $("#Longitude").val().trim();
-
-                // test for empty string
-                if (longitude == "") {
+                // Longitude - test for empty string
+                if (longitude.val().trim() == "") {
                     formValidated = false;
-                    validationMessage = validationMessage + "Longitude Required ";
+                    longitude.after("<span class='error text-danger'>Longitude Required</span>");
                 }
 
-                // test for valid number
-                if (isNaN(longitude)) {
+                // Longitude - test for valid number
+                else if (isNaN(longitude.val())) { 
                     formValidated = false;
-                    validationMessage = validationMessage + "Longitude Not a Number ";
+                    longitude.after("<span class='error text-danger'>Longitude Not a Number</span>");
                 }
 
-                // test for valid range, -180 to +180
-                if ((longitude > 180) || (longitude < -180)) {
+                // Longitude - test for valid range, -180 to +180
+                else if ((longitude.val() > 180) || (longitude.val() < -180)) { 
                     formValidated = false;
-                    validationMessage = validationMessage + "Longitude Invalid Range, Less than -180 or Greater than +180 ";
+                    longitude.after("<span class='error text-danger'>" +
+                        "Longitude Invalid Range, Less than - 180 or Greater than + 180" +
+                        "</span>");
                 }
 
-                // process form validation, submit form if no errors
-                if (!formValidated) {
-                    $("#ValidationMessage").text(validationMessage);
-                } else {
+                // submit form if no errors
+                if (formValidated) {
+                    $(".error").remove();
                     $("#FindDistancesForm").submit();
                 }
 
@@ -172,3 +134,4 @@
         });
     </script>
 }
+
