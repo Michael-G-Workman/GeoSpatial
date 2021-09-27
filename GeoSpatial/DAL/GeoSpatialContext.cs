@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GeoSpatial.Models;
+﻿using GeoSpatial.Models;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
